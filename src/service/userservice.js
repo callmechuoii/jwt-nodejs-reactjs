@@ -13,20 +13,26 @@ const hashUserPassword = (userPassword) => {
     return hashPassword;
 }
 
-const createNewUser = (email, username, password) => {
+const createNewUser = async (email, username, password) => {
     let hashPassword = hashUserPassword(password);
-    connection.query(
-        ' INSERT INTO users (email, username, password) VALUES (?, ?, ?)', [email, username, hashPassword],
-        function (err, result, fields) {
-            if (err) {
-                console.log(err);
-            }
-        }
-    );
+    const connection = await mysql.createConnection({
+        host: 'localhost',
+        user: 'root',
+        database: 'jwt',
+        Promise: bluebird,
+    });
+
+    try {
+        const [rows, fields] = await connection.execute(
+            'INSERT INTO users (email, username, password) VALUES (?, ?, ?)', [email, username, hashPassword]
+        );
+    } catch (err) {
+
+    }
+
 }
 
 const getUserList = async () => {
-    let users = [];
     // create the connection, specify bluebird as Promise
     const connection = await mysql.createConnection({
         host: 'localhost',
@@ -34,18 +40,6 @@ const getUserList = async () => {
         database: 'jwt',
         Promise: bluebird,
     });
-    // return connection.query(
-    //     ' SELECT * from users ',
-    //     function (err, result, fields) {
-    //         if (err) {
-    //             console.log(err);
-    //             return users;
-    //         }
-    //         users = result;
-    //         return users;
-    //     }
-    // );
-    // query database
     try {
         const [rows, fields] = await connection.execute(
             'SELECT * FROM users'
@@ -57,6 +51,24 @@ const getUserList = async () => {
 
 }
 
+const deleteUser = async (id) => {
+
+    const connection = await mysql.createConnection({
+        host: 'localhost',
+        user: 'root',
+        database: 'jwt',
+        Promise: bluebird,
+    });
+    try {
+        const [rows, fields] = await connection.execute(
+            'DELETE FROM users WHERE id=?', [id]
+        );
+        return rows;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 module.exports = {
-    createNewUser, getUserList
+    createNewUser, getUserList, deleteUser
 }
