@@ -8,8 +8,7 @@
     "define": {
       "timestamp": true,
       "freezeTableName": true
-    },
-    "logging": false
+    }
   },
   "test": {
     "username": "root",
