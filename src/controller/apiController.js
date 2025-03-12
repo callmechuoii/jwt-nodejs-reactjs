@@ -16,7 +16,7 @@ const handleRegister = async (req, res) => {
             })
         }
 
-        if (!req.body.password && req.body.password.lenght < 6) {
+        if (!req.body.password && req.body.password.length < 6) {
             return res.status(200).json({
                 EM: 'Password must be at least 6 characters long',
                 EC: '1',

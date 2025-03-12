@@ -1,9 +1,18 @@
 const { Sequelize } = require('sequelize');
-
-const sequelize = new Sequelize('jwt', 'root', null, {
-    host: 'localhost',
-    dialect: 'mysql'
-});
+require('dotenv').config();
+const sequelize = new Sequelize(
+    process.env.DB_DATABASE_NAME,
+    process.env.DB_USERNAME,
+    process.env.DB_PASSWORD,
+    {
+        host: process.env.DB_HOST,
+        dialect: 'postgres',
+        logging: false,
+        query: {
+            "raw": true
+        },
+        timezone: "+07:00"
+    });
 
 
 const connection = async () => {
